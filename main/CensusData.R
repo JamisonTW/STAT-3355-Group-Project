@@ -48,10 +48,7 @@ demographic_data <- get_acs(
   output = "wide"
 )
 
-zip-data <- get_acs(
-  variables = c("")
-  geography = "zcta",
-  zcta = zip_codes,
-  survey = "acs5",
-  output = "wide"
-)
+
+
+unique(police_arrests$Arrestee.Race)
+
