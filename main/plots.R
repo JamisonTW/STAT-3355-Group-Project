@@ -35,14 +35,54 @@ police_arrests$date_time <- as.POSIXct(police_arrests$date_time, format = "%Y-%m
 police_arrests$hour <- as.numeric(format(police_arrests$date_time, "%H"))
 
 # split up arrests into 4 hour intervals
-police_arrests$time_groups <- cut(police_arrests$hour, breaks = c(0, 4, 8, 12, 16, 20, 24), labels = c(1, 2, 3, 4, 5, 6), include.lowest = TRUE)
+police_arrests$time_groups <- cut(police_arrests$hour, breaks = c(0, 4, 8, 12, 16, 20, 24), labels = c("12am-4am", "4am-8am", "8am-12pm", "12pm-4pm", "4pm-8pm", "8pm-12am"), include.lowest = TRUE)
 
-# Display the dataframe
-print(police_arrests)
+# convert day of week to factor variable
+police_arrests$Arrest.Day.of.The.Week <- factor(police_arrests$Arrest.Day.of.The.Week, c("Sun", "Mon", "Tue", "Wed", "Thu","Fri", "Sat"))
+
+# the graph
+library(ggplot2)
+
+# Define a custom dark blue color palette
+dark_blue_palette <- c("#084594", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF")
+
+# Plot
+ggplot(data = subset(police_arrests, !is.na(time_groups)), aes(x = time_groups)) +
+  geom_bar(fill = dark_blue_palette[4]) + # Using a shade of blue from the palette for bars
+  facet_wrap(~ Arrest.Day.of.The.Week, scales = "free_y") +
+  labs(x = "Time Interval", y = "Amount of Arrests", title = "Arrests by Time Interval and Day of the Week") +
+  theme_minimal() + # Using a minimal theme
+  theme(
+    plot.title = element_text(size = 14, hjust = 0.5), # Centered title
+    axis.text.x = element_text(angle = 45, hjust = 1), # Rotate x-axis labels for better readability
+    axis.title = element_text(size = 12), # Adjusting axis label size
+    strip.text = element_text(size = 10), # Adjusting facet label size
+    legend.position = "none", # Removing legend
+    panel.grid.major = element_blank(), # Removing major grid lines
+    panel.grid.minor = element_blank(), # Removing minor grid lines
+    panel.border = element_blank(), # Removing panel border
+    panel.background = element_rect(fill = "white"), # Setting panel background to white
+    plot.background = element_rect(fill = "#F0F5FF") # Setting plot background to a light blue shade
+  )
+
+police_arrests$Arrestee.Race <- factor(police_arrests$Arrestee.Race)
 
 
-
-
-ggplot(data = police_arrests, aes(x = time_groups)) +
-  geom_bar() +
-  facet_wrap("Arrest.Day.of.The.Week")
+ggplot(demographic_data, aes(x = poverty, y = unemployment, color = police_arrests)) +
+  geom_point() +
+  scale_color_gradient(low = "#4D80E4", high = "#E35252") +  # Blue to red color gradient
+  labs(title = "Dallas Zipcodes by Unemployment Rate, Poverty Rate, and Police Arrests",
+       x = "Poverty Rate",
+       y = "Unemployment Rate",
+       color = "Police Arrests") +
+  theme_minimal() +  # Minimal theme
+  theme(
+    plot.title = element_text(size = 14, hjust = 0.5),  # Adjusting title size and position
+    axis.title = element_text(size = 12),  # Adjusting axis label size
+    legend.position = "bottom",  # Moving legend to the bottom
+    panel.grid.major = element_blank(), # Removing major grid lines
+    panel.grid.minor = element_blank(), # Removing minor grid lines
+    panel.border = element_blank(), # Removing panel border
+    panel.background = element_rect(fill = "white"), # Setting panel background to white
+    plot.background = element_rect(fill = "#F0F5FF") # Setting plot background to a light blue shade
+  )
