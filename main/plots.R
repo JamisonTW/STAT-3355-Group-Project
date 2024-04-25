@@ -46,43 +46,56 @@ library(ggplot2)
 # Define a custom dark blue color palette
 dark_blue_palette <- c("#084594", "#2171B5", "#4292C6", "#6BAED6", "#9ECAE1", "#C6DBEF")
 
-# Plot
 ggplot(data = subset(police_arrests, !is.na(time_groups)), aes(x = time_groups)) +
-  geom_bar(fill = dark_blue_palette[4]) + # Using a shade of blue from the palette for bars
-  facet_wrap(~ Arrest.Day.of.The.Week, scales = "free_y") +
-  labs(x = "Time Interval", y = "Amount of Arrests", title = "Arrests by Time Interval and Day of the Week") +
-  theme_minimal() + # Using a minimal theme
+  geom_bar(fill = dark_blue_palette[4]) +
+  facet_wrap(~ Arrest.Day.of.The.Week, scales = "fixed") +
+  labs(x = "Time Interval", y = "Amount of Arrests") +
+  theme_minimal() +
   theme(
-    plot.title = element_text(size = 14, hjust = 0.5), # Centered title
-    axis.text.x = element_text(angle = 45, hjust = 1), # Rotate x-axis labels for better readability
-    axis.title = element_text(size = 12), # Adjusting axis label size
-    strip.text = element_text(size = 10), # Adjusting facet label size
-    legend.position = "none", # Removing legend
-    panel.grid.major = element_blank(), # Removing major grid lines
-    panel.grid.minor = element_blank(), # Removing minor grid lines
-    panel.border = element_blank(), # Removing panel border
-    panel.background = element_rect(fill = "white"), # Setting panel background to white
-    plot.background = element_rect(fill = "#F0F5FF") # Setting plot background to a light blue shade
+    plot.title = element_text(size = 14, hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 5), 
+    axis.title = element_text(size = 12),
+    strip.text = element_text(size = 10),
+    legend.position = "none",
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "#F0F5FF")
   )
 
 police_arrests$Arrestee.Race <- factor(police_arrests$Arrestee.Race)
 
 
+  
+
 ggplot(demographic_data, aes(x = poverty, y = unemployment, color = police_arrests)) +
-  geom_point() +
-  scale_color_gradient(low = "#4D80E4", high = "#E35252") +  # Blue to red color gradient
-  labs(title = "Dallas Zipcodes by Unemployment Rate, Poverty Rate, and Police Arrests",
+  geom_point(size = 2, alpha = 0.7) +  # Adjust point size and transparency
+  scale_color_gradient(low = "#4D80E4", high = "#E35252", na.value = "gray50", name = "Police Arrests") +  # Blue to red color gradient
+  labs(
        x = "Poverty Rate",
-       y = "Unemployment Rate",
-       color = "Police Arrests") +
+       y = "Unemployment Rate") +
   theme_minimal() +  # Minimal theme
   theme(
-    plot.title = element_text(size = 14, hjust = 0.5),  # Adjusting title size and position
-    axis.title = element_text(size = 12),  # Adjusting axis label size
+    plot.title = element_text(size = 16, hjust = 0.5, margin = margin(b = 10)),  # Adjusting title size, position, and margin
+    axis.title = element_text(size = 14),  # Adjusting axis label size
     legend.position = "bottom",  # Moving legend to the bottom
+    legend.title = element_text(size = 12),  # Adjusting legend title size
+    legend.text = element_text(size = 10),  # Adjusting legend text size
     panel.grid.major = element_blank(), # Removing major grid lines
     panel.grid.minor = element_blank(), # Removing minor grid lines
     panel.border = element_blank(), # Removing panel border
     panel.background = element_rect(fill = "white"), # Setting panel background to white
-    plot.background = element_rect(fill = "#F0F5FF") # Setting plot background to a light blue shade
+    plot.background = element_rect(fill = "#F0F5FF"), # Setting plot background to a light blue shade
+    legend.background = element_rect(fill = "transparent"), # Making legend background transparent
+    legend.box.background = element_rect(color = "black") # Adding border to legend
   )
+
+
+
+
+
+
+
+
+

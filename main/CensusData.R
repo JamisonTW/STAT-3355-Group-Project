@@ -87,7 +87,8 @@ demographic_data <- merge(demographic_data, total_arrests, by = "zipcode", all.x
 names(demographic_data) <- c("zipcode", "population", "income", "poverty", "unemployment", "police_arrests")
 
 
-
+# day with most arrests
+most_arrests <- aggregate(police_arrests$IncidentNum, by = list(Day = police_arrests$Arrest.Day.of.The.Week), FUN = length)
 
 ACSlist <- load_variables(2021, "acs5")
 
